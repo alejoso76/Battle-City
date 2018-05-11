@@ -1,0 +1,672 @@
+;LIBRERIAS NECESARIAS
+(require (lib "graphics.ss" "graphics"))
+(open-graphics)
+(require racket/gui/base)
+
+;FUNCIONES QUE DEFINEN LAS VENTANAS.
+(define city (open-viewport "Battle City"  (make-posn 780 960)))
+(define ventana2 (open-pixmap "ventana oculta" 780 960)) ;La ventana oculta, la ventana que estará atras para simular movimiento.
+;INICIO DEL JUEGO
+;MUESTRA UNA PANTALLA DE INICIO Y UNA BARRA DE CARGA PARA JUGAR.
+(define BATTLE1 (open-viewport "BATTLE CITY" 300 300 ))
+(((draw-pixmap-posn "city.bmp" 'bmp) BATTLE1) (make-posn 0 0) "black")
+(define (loader n x y)
+  (if (>= n 0)
+      (begin
+        ((draw-solid-rectangle BATTLE1) (make-posn x y) 50 15 (make-rgb 1 1 1))
+        (sleep 0.1)
+        (loader (- n 1) (+ x 10) y)
+        )
+      ((draw-solid-rectangle BATTLE1) (make-posn x y) 30 15 (make-rgb 1 1 1))
+      )
+  )
+(define (inicio)
+  (begin
+    (loader 18 50 260)
+    (sleep 0.03)
+    (close-viewport BATTLE1)
+    )
+  )
+(inicio)
+
+;VECTORES QUE GUARDAN LAS IMAGENES NECESARIAS
+(define imagenes (make-vector 2))
+(define imagenes2 (make-vector 4))
+(define imagenes3 (make-vector 2))
+(define imagenes4 (make-vector 4))
+
+
+;---------------VECTORES DE LA REJILLA-----------------------------------------------
+;me crea los vectores que se asocian a la rejilla
+;------------------linea de codigo-------------------
+(define mt1 (make-vector 13))
+(define mt2 (make-vector 13))
+(define mt3 (make-vector 13))
+(define mt4 (make-vector 13))
+(define mt5 (make-vector 13))
+(define mt6 (make-vector 13))
+(define mt7 (make-vector 13))
+(define mt8 (make-vector 13))
+(define mt9 (make-vector 13))
+(define mt10 (make-vector 13))
+(define mt11 (make-vector 13))
+(define mt12 (make-vector 13))
+(define mt13 (make-vector 13))
+(define mt14 (make-vector 13))
+(define mt15 (make-vector 13))
+(define mt16 (make-vector 13))
+;--------------linea de visual---------------------------
+(define mtv1 (make-vector 13))
+(define mtv2 (make-vector 13))
+(define mtv3 (make-vector 13))
+(define mtv4 (make-vector 13))
+(define mtv5 (make-vector 13))
+(define mtv6 (make-vector 13))
+(define mtv7 (make-vector 13))
+(define mtv8 (make-vector 13))
+(define mtv9 (make-vector 13))
+(define mtv10 (make-vector 13))
+(define mtv11 (make-vector 13))
+(define mtv12 (make-vector 13))
+(define mtv13 (make-vector 13))
+(define mtv14 (make-vector 13))
+(define mtv15 (make-vector 13))
+(define mtv16 (make-vector 13))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;Linea 2
+(vector-set! mt2 1 1)
+(vector-set! mt2 3 1)
+(vector-set! mt2 9 1)
+(vector-set! mt2 11 1)
+;Linea 3
+(vector-set! mt3 1 1)
+(vector-set! mt3 3 1)
+(vector-set! mt3 5 1)
+(vector-set! mt3 7 1)
+(vector-set! mt3 9 1)
+(vector-set! mt3 11 1)
+;Linea 4
+(vector-set! mt4 1 1)
+(vector-set! mt4 3 1)
+(vector-set! mt4 5 1)
+(vector-set! mt4 6 1)
+(vector-set! mt4 7 1)
+(vector-set! mt4 9 1)
+(vector-set! mt4 11 1)
+;Linea 5
+(vector-set! mt5 1 1)
+(vector-set! mt5 3 1)
+(vector-set! mt5 5 1)
+(vector-set! mt5 7 1)
+(vector-set! mt5 9 1)
+(vector-set! mt5 11 1)
+;Linea 6
+(vector-set! mt6 1 1)
+(vector-set! mt6 3 1)
+(vector-set! mt6 5 1)
+(vector-set! mt6 7 1)
+(vector-set! mt6 9 1)
+(vector-set! mt6 11 1)
+;Linea 8
+(vector-set! mt8 2 1)
+(vector-set! mt8 3 1)
+(vector-set! mt8 5 1)
+(vector-set! mt8 7 1)
+(vector-set! mt8 9 1)
+(vector-set! mt8 10 1)
+;Linea 10
+(vector-set! mt10 1 1)
+(vector-set! mt10 3 1)
+(vector-set! mt10 9 1)
+(vector-set! mt10 11 1)
+;Linea 11
+(vector-set! mt11 1 1)
+(vector-set! mt11 3 1)
+(vector-set! mt11 5 1)
+(vector-set! mt11 7 1)
+(vector-set! mt11 9 1)
+(vector-set! mt11 11 1)
+;Linea 12
+(vector-set! mt12 1 1)
+(vector-set! mt12 3 1)
+(vector-set! mt12 5 1)
+(vector-set! mt12 6 1)
+(vector-set! mt12 7 1)
+(vector-set! mt12 9 1)
+(vector-set! mt12 11 1)
+;Linea 13
+(vector-set! mt13 1 1)
+(vector-set! mt13 3 1)
+(vector-set! mt13 5 1)
+(vector-set! mt13 7 1)
+(vector-set! mt13 9 1)
+(vector-set! mt13 11 1)
+;Linea 14
+(vector-set! mt14 1 1)
+(vector-set! mt14 3 1)
+(vector-set! mt14 9 1)
+(vector-set! mt14 11 1)
+;Linea 15
+(vector-set! mt15 5 1)
+(vector-set! mt15 6 1)
+(vector-set! mt15 7 1)
+;Linea 16
+(vector-set! mt16 5 1)
+(vector-set! mt16 7 1)
+;ENEMIGOS
+(vector-set! mt2 8 3)
+(vector-set! mt5 4 2)
+(vector-set! mt8 12 3)
+(vector-set! mt9 2 3)
+(vector-set! mt9 6 2)
+(vector-set! mt14 6 3)
+(vector-set! mt15 10 2)
+(vector-set! mt16 2 3)
+;AGUILA
+(vector-set! mt16 6 4)
+
+mt1
+mt2
+mt3
+mt4
+mt5
+mt6
+mt7
+mt8
+mt9
+mt10
+mt11
+mt12
+mt13
+mt14
+mt15
+mt16
+;---------------------------------------------------------------------------------
+
+
+(define(mascaraVisual numv)
+  (if (and (> numv 0) (<= numv 16))
+          (if (= numv 1)
+              mtv1
+              (if (= numv 2)
+                  mtv2
+                  (if (= numv 3)
+                      mtv3
+                      (if (= numv 4)
+                          mtv4
+                          (if (= numv 5)
+                              mtv5
+                              (if (= numv 6)
+                                  mtv6
+                                  (if (= numv 7)
+                                      mtv7
+                                      (if (= numv 8)
+                                          mtv8
+                                          (if (= numv 9)
+                                              mtv9
+                                              (if (= numv 10)
+                                                  mtv10
+                                                  (if (= numv 11)
+                                                      mtv11
+                                                      (if (= numv 12)
+                                                          mtv12
+                                                          (if (= numv 13)
+                                                              mtv13
+                                                              (if (= numv 14)
+                                                                  mtv14
+                                                                  (if (= numv 15)
+                                                                      mtv15
+                                                                      (if (= numv 16)
+                                                                          mtv16
+                                                                      ))))))))))))))))))
+;----------------------------------------------------------------------------------
+
+(define(mascaraCodigo num)
+  (if (and (> num 0) (<= num 16))
+          (if (= num 1)
+              mt1
+              (if (= num 2)
+                  mt2
+                  (if (= num 3)
+                      mt3
+                      (if (= num 4)
+                          mt4
+                          (if (= num 5)
+                              mt5
+                              (if (= num 6)
+                                  mt6
+                                  (if (= num 7)
+                                      mt7
+                                      (if (= num 8)
+                                          mt8
+                                          (if (= num 9)
+                                              mt9
+                                              (if (= num 10)
+                                                  mt10
+                                                  (if (= num 11)
+                                                      mt11
+                                                      (if (= num 12)
+                                                          mt12
+                                                          (if (= num 13)
+                                                              mt13
+                                                              (if (= num 14)
+                                                                  mt14
+                                                                  (if (= num 15)
+                                                                      mt15
+                                                                      (if (= num 16)
+                                                                          mt16
+                                                                      ))))))))))))))))))
+
+
+;carga imagen del ladrillo
+(define ladrillo "brick.png")
+;carga imagen del camino
+(define camino "negro.jpg")
+;carga imagen del tanque enemigo 1
+(define enemigo1 "tankenemy1.png")
+;carga imagen del enemigo 2
+(define enemigo2 "tankenemy2.png")
+;carga imagen del aguila 
+(define aguila "AGUILA.png")
+
+;guarda las imagenes en los vectores
+(vector-set! imagenes 0 ladrillo)
+(vector-set! imagenes 1 camino)
+(vector-set! imagenes3 0 enemigo1)
+(vector-set! imagenes3 1 enemigo2)
+(vector-set! imagenes2 0 aguila)
+
+
+;FUNCION QUE MUESTRA LOS VECTORES DE LA MASCARA VISUAL.
+(define (mostrar numv pos hor ver)
+  (if (<= numv 16)
+      (if (<= pos 12)
+              (begin
+                (((draw-pixmap-posn (vector-ref (mascaraVisual numv) pos)) city) (make-posn hor ver) "black")
+                (mostrar numv (+ pos 1) (+ hor 60) ver)
+                )
+              (mostrar (+ numv 1) 0 0 (+ ver 60))
+              )
+      ;cuando termino de recorrer todos los vectores
+      )
+  )
+;FUNCION QUE LLENA LOS VECTORES DE LA MASCARA VISUAL.
+
+(define (llenar numv pos)
+  (if (<= numv 16)
+      (if (<= pos 12)
+          (if (or (= 1 (vector-ref (mascaraCodigo numv) pos)) (= 2 (vector-ref (mascaraCodigo numv) pos))  (= 3 (vector-ref (mascaraCodigo numv) pos)) (= 4 (vector-ref (mascaraCodigo numv) pos)))
+                    (begin
+                    
+                    (if(= 1 (vector-ref (mascaraCodigo numv) pos))
+                    (begin(vector-set! (mascaraVisual numv) pos (vector-ref imagenes 0))
+                    (llenar numv (+ pos 1))))
+                    
+                    (if(= 2 (vector-ref (mascaraCodigo numv) pos))
+                    (begin(vector-set! (mascaraVisual numv) pos (vector-ref imagenes3 0))
+                    (llenar numv (+ pos 1))))                    
+                    
+
+                    (if(= 3 (vector-ref (mascaraCodigo numv) pos))
+                    (begin(vector-set! (mascaraVisual numv) pos (vector-ref imagenes3 1))
+                    (llenar numv (+ pos 1))))
+                    
+                    (if(= 4 (vector-ref (mascaraCodigo numv) pos))
+                    (begin(vector-set! (mascaraVisual numv) pos (vector-ref imagenes2 0))
+                    (llenar numv (+ pos 1)))) 
+                    
+                    )    
+              (begin
+                (vector-set! (mascaraVisual numv) pos (vector-ref imagenes 1))
+                (llenar numv (+ pos 1))
+                )
+              )
+          
+            
+          (llenar (+ numv 1) 0)
+          
+          )
+      (mostrar 1 0 0 0)
+      )
+  )
+           
+(llenar 1 0)
+
+
+
+      
+;MOVIMIENTO DE LA FIGURA
+;--------------------------------------------------------------------------------------------
+;CARGA IMAGEN DEL TANQUE HACIA ARRIBA
+(define tankup "tankup.png")
+;CARGA IMAGEN DEL TANQUE HACIA ABAJO
+(define tankdown "tankdown.png")
+;CARGA IMAGEN DEL TANQUE HACIA LA IZQUIERDA
+(define tankleft "tankleft.png")
+;CARGA IMAGEN DEL TANQUE HACIA LA DERECHA
+(define tankright "tankright.png")
+;GUARDA LAS IMAGENES EN EL SEGUNDO VECTOR UTILIZADO PARA ELLO.
+(vector-set! imagenes2 0 tankup)
+(vector-set! imagenes2 1 tankdown)
+(vector-set! imagenes2 2 tankleft)
+(vector-set! imagenes2 3 tankright)
+
+
+;FUNCION QUE MUESTRA EL TANQUE EN PANTALLA
+(define(punto posx posy lad)
+  (if(equal? lad 'u)
+     (begin
+        (((draw-pixmap-posn (vector-ref imagenes2 0)) city) (make-posn posx posy) "black")
+        )
+    (if (equal? lad 'd)
+        (begin
+          (((draw-pixmap-posn (vector-ref imagenes2 1)) city) (make-posn posx posy) "black")
+          )
+    (if(equal? lad 'l)
+       (begin
+          (((draw-pixmap-posn (vector-ref imagenes2 2)) city) (make-posn posx posy) "black")
+          )
+       (if(equal? lad 'r)
+          (begin
+          
+          (((draw-pixmap-posn (vector-ref imagenes2 3)) city) (make-posn posx posy) "black")
+          )
+         ;else
+        )
+       )
+     )
+   )
+ (copy-viewport city ventana2)
+    ((clear-viewport ventana2))
+ )
+
+
+
+;;;;;;;;;;;;teclado de flechas;;;;;;;;;;;;
+
+;FUNCIONES QUE VERIFICAN EL MOVIMIENTO DE LA FIGURA
+(define (VerificarMovimientoUP x y)
+  (if (=(vector-ref (mascaraCodigo y) x)0) ;verdadero se puede mover, falso no se puede mover
+      #t
+      #f)
+  )
+
+(define (VerificarMovimientoDOWN x y)
+  (if (=(vector-ref (mascaraCodigo (+ y 2)) x)0) ;verdadero se puede mover, falso no se puede mover
+      #t
+      #f)
+  )
+
+(define (VerificarMovimientoLEFT x y)
+  (if (=(vector-ref (mascaraCodigo (+ y 1)) (- x 1))0) ;verdadero se puede mover, falso no se puede mover
+      #t
+      #f)
+  )
+
+(define (VerificarMovimientoRIGHT x y)
+  (if (=(vector-ref (mascaraCodigo (+ y 1)) (+ x 1))0) ;verdadero se puede mover, falso no se puede mover
+      #t
+      #f)
+  )
+;------------------------------------------------------------------------------
+
+;Carga imagen de la bala
+(define balaup "balaup.png")
+(define baladown "baladown.png")
+(define balaright "balaright.png")
+(define balaleft "balaleft.png")
+;Guarda imagen de la bala en los vectores.
+(vector-set! imagenes4 0 balaup)
+(vector-set! imagenes4 1 baladown)
+(vector-set! imagenes4 2 balaright)
+(vector-set! imagenes4 3 balaleft)
+
+
+
+;;;;;;;DISPARO;;;;;;;;;;;
+(define (disparo posx posy direccion)
+;Disparo hacia arriba   
+(if(equal? direccion 8)
+    
+   (begin
+        (if(= ( / posy 60 ) 0) 
+          (
+           begin
+             (((draw-pixmap-posn (vector-ref imagenes4 0)) city) (make-posn ( + posx 27) (- posy 20)) "black")  
+            ((draw-solid-rectangle city)(make-posn posx  posy) 60 60 "black")
+            )
+        
+          (if (= 0 (vector-ref (mascaraCodigo  ( / posy 60 )) ( / posx 60) ))
+       (begin
+        ((draw-solid-rectangle city)(make-posn posx posy) 60 60 "black")
+       (((draw-pixmap-posn (vector-ref imagenes4 0)) city) (make-posn ( + posx 27) (- posy 20)) "black")
+       (sleep 0.1)
+       (disparo posx (- posy 60)  direccion) 
+       )
+      (begin 
+         (vector-set! (mascaraCodigo  ( / posy 60 )) ( / posx 60) 0 )
+         (vector-set! (mascaraVisual  ( / posy 60 )) ( / posx 60) 0 ) 
+            (vector-set! (mascaraCodigo  (- ( / posy 60 ) 1)) ( / posx 60) 0 )
+            (vector-set! (mascaraVisual  (- ( / posy 60 ) 1)) ( / posx 60) 0 )
+         
+        (vector-set! (mascaraCodigo  (+ ( / posy 60 ) 1)) ( / posx 60) 0 )
+            (vector-set! (mascaraVisual  (+ ( / posy 60 ) 1)) ( / posx 60) 0 )    
+       ((draw-solid-rectangle city)(make-posn posx  posy) 60 60 "black"))
+       
+       )
+)
+))
+
+;Disparo hacia abajo 
+(if(equal? direccion 2)
+    
+   (begin
+        (if(= ( / posy 60 ) 16) 
+          (
+           begin
+             (((draw-pixmap-posn (vector-ref imagenes4 1)) city) (make-posn ( + posx 27) (+ posy 120)) "black")  
+            ((draw-solid-rectangle city)(make-posn posx  posy) 60 60 "black")
+            )
+        
+          (if (= 0 (vector-ref (mascaraCodigo  ( / posy 60 )) ( / posx 60) ))
+       (begin
+        ((draw-solid-rectangle city)(make-posn posx (+ posy 60)) 60 60 "black")
+       (((draw-pixmap-posn (vector-ref imagenes4 0)) city) (make-posn ( + posx 27) (+ posy 120)) "black")
+       (sleep 0.1)
+       (disparo posx (+ posy 60)  direccion) 
+       )
+      (begin 
+        
+
+        
+         (vector-set! (mascaraCodigo  ( / posy 60 )) ( / posx 60) 0 )
+         (vector-set! (mascaraVisual  ( / posy 60 )) ( / posx 60) 0 ) 
+            (vector-set! (mascaraCodigo  (+ ( / posy 60 ) 1)) ( / posx 60) 0 )
+            (vector-set! (mascaraVisual  (+ ( / posy 60 ) 1)) ( / posx 60) 0 )
+         
+        (vector-set! (mascaraCodigo  (+ ( / posy 60 ) 0)) ( / posx 60) 0 )
+            (vector-set! (mascaraVisual  (+ ( / posy 60 ) 0)) ( / posx 60) 0 )    
+       ((draw-solid-rectangle city)(make-posn posx  posy) 60 60 "black"))
+       
+       )
+)
+))
+
+;Disparo hacia la izquierda
+(if(equal? direccion 4)
+    
+   (begin
+        (if(= ( / posx 60 ) 0) 
+          (
+           begin
+             (((draw-pixmap-posn (vector-ref imagenes4 3)) city) (make-posn (- posx 120) (+ posy 20)) "black")  
+            ((draw-solid-rectangle city)(make-posn posx  posy) 60 60 "black")
+            )
+        
+          (if (= 0 (vector-ref (mascaraCodigo  ( / posy 60 )) ( / posx 60) ))
+       (begin
+        ((draw-solid-rectangle city)(make-posn (- posx 60) posy) 60 60 "black")
+       (((draw-pixmap-posn (vector-ref imagenes4 3)) city) (make-posn ( - posx 120) (+ posy 20)) "black")
+       (sleep 0.1)
+       (disparo (- posx 60) posy  direccion) 
+       )
+      (begin 
+         (vector-set! (mascaraCodigo  ( / posy 60 )) ( / posx 60) 0 )
+         (vector-set! (mascaraVisual  ( / posy 60 )) ( / posx 60) 0 ) 
+            (vector-set! (mascaraCodigo  (+ ( / posy 60 ) 0)) ( / posx 60) 0 )
+            (vector-set! (mascaraVisual  (+ ( / posy 60 ) 0)) ( / posx 60) 0 )
+         
+        (vector-set! (mascaraCodigo  (+ ( / posy 60 ) 0)) ( / posx 60) 0 )
+            (vector-set! (mascaraVisual  (+ ( / posy 60 ) 0)) ( / posx 60) 0 )    
+       ((draw-solid-rectangle city)(make-posn posx  posy) 60 60 "black"))
+       
+       )
+)
+))
+
+;Disparo hacia la derecha
+  (if(equal? direccion 6)
+    
+   (begin
+        (if(= ( / posx 60 ) 12) 
+          (
+           begin
+             (((draw-pixmap-posn (vector-ref imagenes4 2)) city) (make-posn (+ posx 120) (+ posy 20)) "black")  
+            ((draw-solid-rectangle city)(make-posn posx  posy) 60 60 "black")
+            )
+        
+          (if (= 0 (vector-ref (mascaraCodigo  ( / posy 60 )) ( / posx 60) ))
+       (begin
+        ((draw-solid-rectangle city)(make-posn (+ posx 60) (+ posy 0)) 60 60 "black")
+       (((draw-pixmap-posn (vector-ref imagenes4 2)) city) (make-posn ( + posx 120) (+ posy 20)) "black")
+       (sleep 0.1)
+       (disparo (+ posx 60) posy  direccion) 
+       )
+      (begin 
+         (vector-set! (mascaraCodigo  ( / posy 60 )) ( / posx 60) 0 )
+         (vector-set! (mascaraVisual  ( / posy 60 )) ( / posx 60) 0 ) 
+            (vector-set! (mascaraCodigo  (+ ( / posy 60 ) 1)) ( / posx 60) 0 )
+            (vector-set! (mascaraVisual  (+ ( / posy 60 ) 1)) ( / posx 60) 0 )
+         
+        (vector-set! (mascaraCodigo  (+ ( / posy 60 ) 0)) ( / posx 60) 0 )
+            (vector-set! (mascaraVisual  (+ ( / posy 60 ) 0)) ( / posx 60) 0 )    
+       ((draw-solid-rectangle city)(make-posn posx  posy) 60 60 "black"))
+       
+       )
+)
+))
+
+  )
+
+ 
+
+;FUNCION PRINCIPAL QUE PERMITE MOVER AL TANQUE POR LOS ESPACIOS NEGROS, SIN CRUZAR POR LOS LADRILLOS, Y DISPARAR.
+
+(define (teclado posx posy press direccion)
+  
+ (if  (equal? press #\space)
+      (begin
+        (if (= direccion 8);Hacia arriba
+            (begin
+              (play-sound "disparo.wav" #t) ;Reproduce el sonido del disparo.
+              (display "ShootUP")
+            (disparo posx (- posy 60) direccion)) 
+        (if (= direccion 2);Hacia abajo
+            (begin
+              (play-sound "disparo.wav" #t) 
+              (display "ShootDOWN")
+              (disparo posx posy direccion))
+          (if (= direccion 4) ;Hacia la izquierda
+              (begin
+              (play-sound "disparo.wav" #t)
+              (display "ShootLEFT")
+              (disparo posx posy direccion))
+          (if (= direccion 6) ;Hacia la derecha
+              (begin
+              (play-sound "disparo.wav" #t)
+              (display "ShootRIGHT")
+              (disparo posx posy direccion))
+              
+              )))))
+      (newline))
+  
+  (if (and(equal? press 'up)(> posy 0));Movimiento arriba
+     (begin
+       (if(VerificarMovimientoUP (/ posx 60) (/ posy 60)) ;posx da la posicion del vector y el posy me da el vector
+          (begin
+            (play-sound "movimiento.wav" #t);Reproduce el sonido del movimiento
+            (display (/ posx 60)) (display "  ") (display (/ posy 60)) (newline) ;Muestra las posiciones del tanque en la matriz.
+            (punto posx (- posy 60) 'u);llamado de la funcion "punto"
+            ((draw-solid-rectangle city)(make-posn posx posy) 60 60 "black")
+            (teclado posx (- posy 60) (key-value(get-key-press city)) 8)
+          )
+          
+       (teclado posx posy (key-value(get-key-press city)) 8)
+       )
+       )
+    (if(and (equal? press 'down)(< posy 900) );Movimiento abajo
+     (begin
+       (if(VerificarMovimientoDOWN (/ posx 60) (/ posy 60))
+          (begin
+            (play-sound "movimiento.wav" #t)
+            (display (/ posx 60)) (display "  ") (display (/ posy 60)) (newline)
+            (punto posx (+ posy 60) 'd)
+            ((draw-solid-rectangle city)(make-posn posx posy) 60 60 "black")
+            (teclado posx (+ posy 60) (key-value(get-key-press city)) 2)
+            )
+          (teclado posx posy (key-value(get-key-press city)) 2)
+      )
+       )
+
+     (if (and(equal? press 'left) (> posx 0));Movimiento izquierda
+      (begin
+        (if(VerificarMovimientoLEFT (/ posx 60) (/ posy 60))
+           (begin
+             (play-sound "movimiento.wav" #t)
+             (display (/ posx 60)) (display "  ") (display (/ posy 60)) (newline)
+             (punto (- posx 60) posy 'l)
+             ((draw-solid-rectangle city)(make-posn posx posy) 60 60 "black")
+             (teclado (- posx 60) posy (key-value(get-key-press city)) 4)
+             )
+           (teclado posx posy (key-value(get-key-press city)) 4)
+           )
+        )
+        (if(and (equal? press 'right ) (< posx 700));Movimiento derecha
+         (begin
+           (if(VerificarMovimientoRIGHT (/ posx 60) (/ posy 60))
+              (begin
+                (play-sound "movimiento.wav" #t)
+                (display (/ posx 60)) (display "  ") (display (/ posy 60)) (newline)
+                (punto (+ posx 60) posy 'r)
+                ((draw-solid-rectangle city)(make-posn posx posy) 60 60 "black")
+                (teclado (+ posx 60) posy (key-value(get-key-press city)) 6)
+                )
+           (teclado posx posy (key-value(get-key-press city)) 6)
+         )
+         )
+          ;else
+            (teclado posx posy (key-value  (get-key-press city)) direccion) 
+        
+        )
+      )
+     )
+   )
+  
+)
+;;;;;;;lamado;;;;;;;
+(teclado 0 0 'up 8)
+
+;;;;;GAME OVER;;;;;;;
+
+(define victory (open-viewport "¡VICTORIA!" 503 166 ))
+
+(define termino numv pos)
+(if (and (= 0 (vector-ref (mascaraCodigo numv) pos))(= 1 (vector-ref (mascaraCodigo numv) pos)))
+    (begin
+      victory
+      (((draw-pixmap-posn "gameover.png" 'png) victory) (make-posn 0 0) "black")
+      (termino (+ numv 1) (+ pos 1))
+      )
+    )
+(termino 0 0)
+      
